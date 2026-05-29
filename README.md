@@ -25,4 +25,4 @@ service_account = "<SERVICE_ACCOUNT_NAME>"
 ```
 terraform output -raw yc_sa_json_credentials_raw > key.json
 ```
-4. переходим к развертыванию самого приложения. [text](https://github.com/Swaggasome/tms-graduation-project.git)
+4. переходим к развертыванию самого приложения. [TMS GUARDIAN PROJECT](https://github.com/Swaggasome/tms-graduation-project.git)
