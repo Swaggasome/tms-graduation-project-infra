@@ -9,7 +9,6 @@ cloud_id       = "<CLOUD_ID>"
 folder_id      = "<FOLDER_ID>"
 ssh_public_key = "<ssh-rsa AAAAB...>"
 bucket_name    = "<BUCKET_NAME>"
-registry_id    = "<REGISTRY_ID>"
 ```
 ```
 #setup_backend/terraform.tfvars
