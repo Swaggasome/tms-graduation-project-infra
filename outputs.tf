@@ -3,9 +3,10 @@ output "k8s_id" {
   sensitive = true
 }
 
-# output "registry_id" {
-#   value = yandex_container_registry.smartmeeting.id
-# }
+output "registry_id" {
+  value = yandex_container_registry.smartmeeting.id
+  sensitive = true
+}
 
 # Получить ключ:
 output "yc_sa_json_credentials_raw" {
