@@ -31,3 +31,24 @@ resource "yandex_storage_bucket" "state" {
   secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
   force_destroy = true
 }
+
+resource "yandex_storage_bucket" "staticfiles" {
+  bucket     = "smartmeeting-static"
+  access_key = yandex_iam_service_account_static_access_key.sa-static-key.access_key
+  secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
+  force_destroy = true
+  default_storage_class   = "STANDARD"
+  anonymous_access_flags {
+    read        = true
+    list        = false
+    config_read = false
+  }
+  max_size                = 214748365
+  versioning {
+    enabled = false
+  }
+}
+
+resource "yandex_container_registry" "smartmeeting" {
+  name      = "smartmeeting"
+}
