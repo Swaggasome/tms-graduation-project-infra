@@ -38,8 +38,3 @@ variable "bucket_name" {
   description = "Your Bucket Name"
   type        = string
 }
-
-variable "registry_id" {
-  description = "Yandex Cloud Container Registry ID"
-  type        = string
-}
