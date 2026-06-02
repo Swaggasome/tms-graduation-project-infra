@@ -20,7 +20,7 @@ resource "yandex_kubernetes_node_group" "k8s_nodes" {
 
     network_interface {
       subnet_ids = [yandex_vpc_subnet.k8s_subnet.id]
-      nat        = false # Присвоить публичный IP для выхода в интернет
+      nat        = true # Присвоить публичный IP для выхода в интернет
     }
 
     scheduling_policy {
@@ -33,8 +33,10 @@ resource "yandex_kubernetes_node_group" "k8s_nodes" {
   }
 
   scale_policy {
-    fixed_scale {
-      size = 2 # Количество узлов в группе
+    auto_scale {
+      min     = 2
+      max     = 5
+      initial = 2
     }
   }
 
