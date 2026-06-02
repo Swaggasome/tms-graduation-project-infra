@@ -69,3 +69,22 @@ locals {
     private_key        = yandex_iam_service_account_key.github_actions_key.private_key
   })
 }
+
+resource "yandex_iam_service_account" "sa_staticfiles" {
+  folder_id = var.folder_id
+  name      = "sa-staticfiles"
+}
+
+# Даем права на запись для этого сервисного аккаунта
+resource "yandex_resourcemanager_folder_iam_member" "sa_staticfiles_editor" {
+  folder_id = var.folder_id
+  role      = "storage.editor"
+  member    = "serviceAccount:${yandex_iam_service_account.sa_staticfiles.id}"
+}
+
+# Создаем ключи доступа Static Access Keys
+resource "yandex_iam_service_account_static_access_key" "sa_staticfiles_key" {
+  service_account_id = yandex_iam_service_account.sa_staticfiles.id
+  description        = "static access key for object storage staticfiles"
+}
+

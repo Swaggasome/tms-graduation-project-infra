@@ -261,7 +261,7 @@ main() {
                     terraform init \
                     -backend-config="access_key=$ACCESS_KEY" \
                     -backend-config="secret_key=$SECRET_KEY" \
-                    -reconfigure > "$log_file" 2>&1
+                    -reconfigure > /tmp/terraform_reconfigure.log 2>&1
                     
                     # Очищаем переменные
                     unset ACCESS_KEY SECRET_KEY
