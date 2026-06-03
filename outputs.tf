@@ -15,11 +15,11 @@ output "yc_sa_json_credentials_raw" {
   sensitive   = true
 }
 
-output "access_key" {
+output "static_files_access_key" {
   value     = yandex_iam_service_account_static_access_key.sa_staticfiles_key.access_key
   sensitive = true
 }
-output "secret_key" {
+output "static_files_secret_key" {
   value     = yandex_iam_service_account_static_access_key.sa_staticfiles_key.secret_key
   sensitive = true
 }
