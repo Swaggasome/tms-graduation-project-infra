@@ -3,9 +3,9 @@ terraform {
     endpoints = {
       s3 = "https://storage.yandexcloud.net"
     }
-    bucket = "terraform-state-bucket-for-tms-guardian-project"         # Имя вашего бакета
-    region = "ru-central1-a"         # Регион
-    key    = "lab/terraform.tfstate" # Путь к файлу в бакете
+    bucket = "terraform-state-bucket-for-tms-guardian-project" # Имя вашего бакета
+    region = "ru-central1-a"                                   # Регион
+    key    = "lab/terraform.tfstate"                           # Путь к файлу в бакете
 
     # Настройки для совместимости с Yandex Cloud
     skip_region_validation      = true

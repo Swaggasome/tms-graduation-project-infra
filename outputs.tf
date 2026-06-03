@@ -4,7 +4,7 @@ output "k8s_id" {
 }
 
 output "registry_id" {
-  value = yandex_container_registry.smartmeeting.id
+  value     = yandex_container_registry.smartmeeting.id
   sensitive = true
 }
 

@@ -46,9 +46,9 @@ resource "yandex_resourcemanager_folder_iam_member" "editor" {
 
 # Назначаем роль для работы с Container Registry
 resource "yandex_resourcemanager_folder_iam_member" "registry_pusher" {
-  folder_id   = var.folder_id
-  role        = "container-registry.images.pusher"
-  member      = "serviceAccount:${yandex_iam_service_account.github_actions.id}"
+  folder_id = var.folder_id
+  role      = "container-registry.images.pusher"
+  member    = "serviceAccount:${yandex_iam_service_account.github_actions.id}"
 }
 
 resource "yandex_iam_service_account_key" "github_actions_key" {
