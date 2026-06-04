@@ -10,4 +10,8 @@ resource "yandex_storage_bucket" "staticfiles" {
     config_read = false
   }
   max_size = 214748365
+
+  depends_on = [
+    yandex_resourcemanager_folder_iam_member.sa_staticfiles_editor
+  ]
 }
