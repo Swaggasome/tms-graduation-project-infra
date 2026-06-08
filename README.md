@@ -1,28 +1,47 @@
-### Первичное развертывание
+# tms-graduation-project-infra
 
-1. Создайте файл в terraform.tfvars и setup_backend/terraform.tfvars заполните переменными окружения.
+Terraform-репозиторий для создания основной инфраструктуры проекта в Yandex Cloud.
 
-```
-# terraform.tfvars
-yc_token       = "<YC_TOKEN>"
-cloud_id       = "<CLOUD_ID>"
-folder_id      = "<FOLDER_ID>"
-ssh_public_key = "<ssh-rsa AAAAB...>"
-bucket_name    = "<BUCKET_NAME>"
-```
-```
-#setup_backend/terraform.tfvars
-cloud_id        = "<CLOUD_ID>"
-folder_id       = "<FOLDER_ID>"
-bucket_name     = "<BUCKET_NAME>"
-token           = "<YC_TOKEN>"
-service_account = "<SERVICE_ACCOUNT_NAME>"
-```
+Репозиторий разворачивает:
 
-2. Запустите команду `./manage.py`  ивыберите пункт 1 для первичной установки backend для хранения состояний основного проекта и установки основного проекта.
-3. Сохраните json ключ для использования его в github actions. 
-```
-terraform output -raw yc_sa_json_credentials_raw > key.json
-```
-4. переходим к развертыванию самого приложения. [TMS GUARDIAN PROJECT](https://github.com/Swaggasome/tms-graduation-project.git)
+- Managed Kubernetes cluster;
+- Kubernetes node group;
+- VPC network;
+- VPC subnet;
+- Container Registry;
+- service account для управления Kubernetes cluster;
+- service account для Kubernetes node group;
+- service account для GitHub Actions;
+- authorized key для GitHub Actions;
+- Object Storage bucket для static files;
+- static access keys для static files bucket;
+- IAM-роли для service accounts.
+
+Terraform state хранится удалённо в Yandex Object Storage через S3-compatible backend.
+
+---
+
+## Архитектура Terraform state
+
+Этот репозиторий использует remote backend:
+
+```hcl
+terraform {
+  backend "s3" {
+    endpoints = {
+      s3 = "https://storage.yandexcloud.net"
+    }
+
+    bucket = "terraform-state-bucket-for-tms-guardian-project"
+    region = "ru-central1-a"
+    key    = "lab/terraform.tfstate"
+
+    skip_region_validation      = true
+    skip_credentials_validation = true
+    skip_requesting_account_id  = true
+    skip_s3_checksum            = true
+    use_path_style              = true
+  }
+}
+
 
