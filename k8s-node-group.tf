@@ -28,7 +28,7 @@ resource "yandex_kubernetes_node_group" "k8s_nodes" {
     }
 
     metadata = {
-      ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+      ssh-keys = "ubuntu:${var.ssh_public_key}}"
     }
   }
 

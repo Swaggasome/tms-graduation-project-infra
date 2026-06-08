@@ -1,0 +1,105 @@
+name: Terraform Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.tf"
+      - ".github/workflows/terraform-infra.yml"
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**.tf"
+      - ".github/workflows/terraform-infra.yml"
+
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform action"
+        required: true
+        default: "plan"
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  TF_IN_AUTOMATION: "true"
+  TF_INPUT: "false"
+
+  AWS_ACCESS_KEY_ID: ${{ secrets.YC_STORAGE_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_STORAGE_SECRET_KEY }}
+
+jobs:
+  terraform:
+    name: Terraform infrastructure
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+
+      - name: Terraform fmt check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform plan
+        if: ${{ github.event_name == 'pull_request' || github.event.inputs.action == 'plan' || github.event_name == 'push' }}
+        run: |
+          terraform plan \
+            -var="yc_token=${{ secrets.YC_TOKEN }}" \
+            -var="cloud_id=${{ secrets.YC_CLOUD_ID }}" \
+            -var="folder_id=${{ secrets.YC_FOLDER_ID }}" \
+            -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}" \
+            -var="cluster_name=${{ vars.CLUSTER_NAME }}" \
+            -var="default_zone=${{ vars.YC_DEFAULT_ZONE }}" \
+            -var="k8s_version=${{ vars.K8S_VERSION }}" \
+            -var="bucket_name=${{ vars.TF_STATE_BUCKET }}"
+
+      - name: Terraform apply
+        if: ${{ github.event_name == 'push' || github.event.inputs.action == 'apply' }}
+        run: |
+          terraform apply -auto-approve \
+            -var="yc_token=${{ secrets.YC_TOKEN }}" \
+            -var="cloud_id=${{ secrets.YC_CLOUD_ID }}" \
+            -var="folder_id=${{ secrets.YC_FOLDER_ID }}" \
+            -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}" \
+            -var="cluster_name=${{ vars.CLUSTER_NAME }}" \
+            -var="default_zone=${{ vars.YC_DEFAULT_ZONE }}" \
+            -var="k8s_version=${{ vars.K8S_VERSION }}" \
+            -var="bucket_name=${{ vars.TF_STATE_BUCKET }}"
+
+      - name: Terraform destroy
+        if: ${{ github.event.inputs.action == 'destroy' }}
+        run: |
+          terraform destroy -auto-approve \
+            -var="yc_token=${{ secrets.YC_TOKEN }}" \
+            -var="cloud_id=${{ secrets.YC_CLOUD_ID }}" \
+            -var="folder_id=${{ secrets.YC_FOLDER_ID }}" \
+            -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}" \
+            -var="cluster_name=${{ vars.CLUSTER_NAME }}" \
+            -var="default_zone=${{ vars.YC_DEFAULT_ZONE }}" \
+            -var="k8s_version=${{ vars.K8S_VERSION }}" \
+            -var="bucket_name=${{ vars.TF_STATE_BUCKET }}"
