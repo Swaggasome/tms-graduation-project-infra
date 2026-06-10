@@ -9,8 +9,8 @@ resource "yandex_kubernetes_node_group" "k8s_nodes" {
 
     resources {
       cores         = 2
-      memory        = 2
-      core_fraction = 50 # 100% гарантированной производительности vCPU
+      memory        = 4
+      core_fraction = 100 # 100% гарантированной производительности vCPU
     }
 
     boot_disk {
